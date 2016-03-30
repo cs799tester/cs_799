@@ -19,12 +19,11 @@ from keras.utils import np_utils
 from sklearn import cross_validation
 from sklearn.metrics import roc_auc_score
 from keras.models import model_from_json
+from subprocess import call
 
 
 #create giant pdf for all pcba assays
-dataset_directory = "datasets"
-
-os.chdir(dataset_directory)
+dataset_directory = "datasets/"
 
 pcba_file = "pcba_mmtn_canon.csv.gz"
 dude_file = "dude_mmtn_canon.csv.gz"
@@ -32,7 +31,7 @@ muv_file = "muv_mmtn_canon.csv.gz"
 tox_file = "tox21_mmtn_canon.csv.gz"
 
 #read data sets
-data_pd = pd.read_csv(muv_file, dtype=str)
+data_pd = pd.read_csv(dataset_directory+ muv_file, dtype=str)
 
 #now using the pandas df, construct the training set and test set
 X_train = np.zeros(shape=(data_pd.shape[0], 1024))
@@ -87,6 +86,10 @@ for i in range(iters):
               
     
     model.save_weights("my_model_weights_iter_" + str(iters) + ".h5")
+
+    call(["git",  "add",  "--all"])
+    call(["git" , "commit",  "-m" , "\"updating weights\""])
+    call(["git",  "push", "https://cs799tester:tester55555@github.com/cs799tester/cs_799.git", "--all"])
 
 #generate score for training and validation set
 score1 = model.evaluate(X_train, y_train, show_accuracy=True)
