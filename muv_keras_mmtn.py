@@ -18,6 +18,7 @@ from rdkit.Chem.Fingerprints import FingerprintMols
 from keras.utils import np_utils
 from sklearn import cross_validation
 from sklearn.metrics import roc_auc_score
+from keras.models import model_from_json
 
 
 #create giant pdf for all pcba assays
@@ -68,11 +69,24 @@ model.compile(loss='categorical_crossentropy',
               optimizer=sgd,
               class_mode='binary')
 
-#now train
-model.fit(X_train, y_train,
-          nb_epoch=1000000,
-          batch_size = 256,
-          show_accuracy=True)
+
+#save model architecture for later use
+json_string = model.to_json()
+open('muv_model_architecture.json', 'w').write(json_string)
+
+#now train and save weights every 50,000 iterations
+total_epochs = 1000000
+save_iters = 50000
+iters = int(total_epochs/save_iters)
+
+for i in range(iters): 
+    model.fit(X_train, y_train,
+              nb_epoch=save_iters,
+              batch_size = 256,
+              show_accuracy=True)
+              
+    
+    model.save_weights("my_model_weights_iter_" + str(iters) + ".h5")
 
 #generate score for training and validation set
 score1 = model.evaluate(X_train, y_train, show_accuracy=True)
