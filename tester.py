@@ -21,10 +21,6 @@ from sklearn.metrics import roc_auc_score
 from keras.models import model_from_json
 from subprocess import call
 
-dataset_directory = "datasets"
-
-os.chdir(dataset_directory)
-
 model = Sequential()
 
 model.add(Dense(1000, input_dim=1024, init='normal', activation='relu'))
