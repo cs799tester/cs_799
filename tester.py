@@ -19,6 +19,11 @@ from keras.utils import np_utils
 from sklearn import cross_validation
 from sklearn.metrics import roc_auc_score
 from keras.models import model_from_json
+from subprocess import call
+
+dataset_directory = "datasets"
+
+os.chdir(dataset_directory)
 
 model = Sequential()
 
@@ -38,3 +43,7 @@ model.compile(loss='categorical_crossentropy',
 json_string = model.to_json()
 open('muv_model_architecture.json', 'w').write(json_string)
 model.save_weights("my_model_weights.h5")
+
+call(["git add --all"])
+call(["git commit -m \"updating weights\""])
+call(["git push https://cs799tester:tester55555@github.com/cs799tester/cs_799.git --all"])
