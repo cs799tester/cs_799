@@ -74,7 +74,7 @@ json_string = model.to_json()
 open('muv_model_architecture.json', 'w').write(json_string)
 
 #now train and save weights every 50,000 iterations
-total_epochs = 1000000
+total_epochs = 200000
 save_iters = 50000
 iters = int(total_epochs/save_iters)
 
